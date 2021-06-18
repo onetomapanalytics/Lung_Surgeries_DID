@@ -1,0 +1,85 @@
+STEP 1 
+Code for Basic Data cleaning and Data Prep to capture All Procedures 
+Code was repeated on all the Individual yearly files 2010-2015
+
+*********************************************************************
+
+use "file path 2010 Data"
+
+drop POA1 POA2 POA3 POA4 POA5 POA6 POA7 POA8 POA9 POA10 POA11 POA12 POA13 POA14 POA15 POA16 POA17 POA18 POA19 POA20 POA21 POA22 POA23 POA24 POA25 POA26 POA27 POA28 POA29 POA30 POA_EXT_IN POA_EXT__A POA_EXT__B DAYS_PROC1 DAYS_PROC2 DAYS_PROC3 DAYS_PROC4 DAYS_PROC5 DAYS_PROC6 DAYS_PROC7 DAYS_PROC8 DAYS_PROC9 DAYS_PRO_A DAYS_PRO_B DAYS_PRO_C DAYS_PRO_D DAYS_PRO_E DAYS_PRO_F DAYS_PRO_G DAYS_PRO_H DAYS_PRO_I DAYS_PRO_J DAYS_PRO_K DAYS_PRO_L DAYS_PRO_M DAYS_PRO_N DAYS_PRO_O DAYS_PRO_P DAYS_PRO_Q DAYS_PRO_R DAYS_PRO_S DAYS_PRO_T DAYS_PRO_U CONDTN
+
+tab idx_pr 
+
+gen CCIcat = . 
+replace CCIcat = 0 if  CCI == 0
+replace CCIcat = 1 if  CCI == 1
+replace CCIcat = 2 if  CCI >= 2 
+
+drop idx_pr 
+
+rename idx_lob idx_pr
+
+gen idx_lob = . 
+
+foreach v of var PRINPROC{
+replace idx_lob = 1 if `v' ==  "3249" 
+}		
+
+foreach v of var PRINPROC{
+replace idx_lob = 2 if  `v' ==  "3241" 
+}	
+
+foreach v of var OTHPROC1-OTHPROC30{
+replace idx_lob = 3 if idx_lob == 1 & `v'=="1741" | idx_lob == 2 & `v'=="1742" | idx_lob == 2 & `v'=="1743" | idx_lob == 2 & `v'=="1744" | idx_lob == 2 & `v'=="1745" | idx_lob == 2 & `v'=="1749"    
+}
+
+gen idx_wedge = . 
+
+foreach v of var PRINPROC{
+replace idx_wedge = 1 if `v' ==  "3223" | `v' == "3226" | `v' == "3229" | `v' == "329" | `v' == "3222"
+}		
+
+foreach v of var PRINPROC{
+replace idx_wedge = 2 if  `v' ==  "3220" | `v' == "3225"
+}	
+
+foreach v of var OTHPROC1-OTHPROC30{
+replace idx_wedge = 3 if idx_wedge == 1 & `v'=="1741" | idx_wedge == 2 & `v'=="1742" | idx_wedge == 2 & `v'=="1743" | idx_wedge == 2 & `v'=="1744" | idx_wedge == 2 & `v'=="1745" | idx_wedge == 2 & `v'=="1749"    
+}
+
+gen idx_pneu = . 
+
+foreach v of var PRINPROC{
+replace idx_pneu = 1 if `v' ==  "3259" 
+}		
+
+foreach v of var PRINPROC{
+replace idx_pneu = 2 if  `v' ==  "3250" 
+}	
+
+foreach v of var OTHPROC1-OTHPROC30{
+replace idx_pneu = 3 if idx_pneu == 1 & `v'=="1741" | idx_pneu == 2 & `v'=="1742" | idx_pneu == 2 & `v'=="1743" | idx_pneu == 2 & `v'=="1744" | idx_pneu == 2 & `v'=="1745" | idx_pneu == 2 & `v'=="1749"    
+}
+
+gen idx_seg = . 
+
+foreach v of var PRINPROC{
+replace idx_seg = 1 if `v' ==  "3239" 
+}		
+
+foreach v of var PRINPROC{
+replace idx_seg = 2 if  `v' ==  "3230" 
+}	
+
+foreach v of var OTHPROC1-OTHPROC30{
+replace idx_seg = 3 if idx_seg == 1 & `v'=="1741" | idx_seg == 2 & `v'=="1742" | idx_seg == 2 & `v'=="1743" | idx_seg == 2 & `v'=="1744" | idx_seg == 2 & `v'=="1745" | idx_seg == 2 & `v'=="1749"    
+}
+
+
+keep if idx_pr == 1 |  idx_pr == 2 | idx_pr == 3
+
+tab idx_pr
+
+drop idx_hys idx_col idx_gas idx_sleeve idx_reflux
+
+save "file path", replace 

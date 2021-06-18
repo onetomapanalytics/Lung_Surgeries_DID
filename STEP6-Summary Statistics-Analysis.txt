@@ -1,0 +1,369 @@
+STEP 6 
+
+Code for All the summary statisics and univariate analysis (this was repeated on the unmatched and matched Data)
+
+*********************************************************************
+use "file path"
+
+
+codebook MCARE_NBR
+
+
+tab idx_lob 
+tab idx_wedge 
+tab idx_seg 
+
+tab idx_pr
+
+tab DISCHSTAT 
+
+tab ADMSRC 
+
+*************************
+summarize TCHGS 
+summarize TCHGS if idx_pr == 1
+summarize TCHGS if idx_pr == 2
+summarize TCHGS if idx_pr == 3
+
+summarize OPRMCHGS 
+summarize OPRMCHGS if idx_pr == 1
+summarize OPRMCHGS if idx_pr == 2
+summarize OPRMCHGS if idx_pr == 3
+
+summarize MEDCHGS 
+summarize MEDCHGS if idx_pr == 1
+summarize MEDCHGS if idx_pr == 2
+summarize MEDCHGS if idx_pr == 3
+
+summarize ANESCHGS 
+summarize ANESCHGS if idx_pr == 1
+summarize ANESCHGS if idx_pr == 2
+summarize ANESCHGS if idx_pr == 3
+
+summarize RECOVCHGS 
+summarize RECOVCHGS if idx_pr == 1
+summarize RECOVCHGS if idx_pr == 2
+summarize RECOVCHGS if idx_pr == 3
+
+summarize ROOMCHGS 
+summarize ROOMCHGS if idx_pr == 1
+summarize ROOMCHGS if idx_pr == 2
+summarize ROOMCHGS if idx_pr == 3
+
+*********************************************************************************
+
+mdesc SEX AGE RACE ETHNICITY PAYER CCIcat ADM_PRIOR
+
+tab AGE 
+
+gen Age1 = 1 if AGE <=40
+replace Age1 = 2 if AGE >=41 & AGE <=50
+replace Age1 = 3 if AGE >= 51 & AGE <=70
+replace Age1 = 4 if AGE >= 71
+
+tab Age1
+rename Age1 Age_Cat
+
+*********************************************************************************
+tab SEX idx_pr, row col chi2
+
+tab Age_Cat idx_pr, row col chi2
+
+tab RACE idx_pr, row col chi2
+
+tab ETHNICITY idx_pr, row col chi2
+
+tab PAYER idx_pr, row col chi2
+
+tab CCIcat idx_pr, row col chi2
+
+tab ADM_PRIOR idx_pr, row col chi2
+
+tab ADMSRC idx_pr, row col chi2
+
+tab DISCHSTAT idx_pr, row col chi2
+
+
+*All Chi square comparisons are significant 
+
+*********************************************************************************
+tab SEX idx_pr, col
+
+tab Age_Cat idx_pr, col 
+
+tab RACE idx_pr, col 
+
+tab ETHNICITY idx_pr, col 
+
+tab PAYER idx_pr, col 
+
+tab CCIcat idx_pr, col 
+
+tab ADM_PRIOR idx_pr, col 
+
+tab ADMSRC idx_pr, col 
+
+tab DISCHSTAT idx_pr, col 
+
+
+tab idx_pr if DISCHSTAT == "20"
+
+
+*********************************************************************************
+Summary Stats and Comparisons for All Procedures
+
+anova TCHGS idx_pr 
+tabstat TCHGS, statistics( mean sd skewness ) by(idx_pr)	
+pwcompare idx_pr, mcompare(tukey) effects
+
+anova OPRMCHGS idx_pr 
+tabstat OPRMCHGS, statistics( mean sd skewness ) by(idx_pr)	
+pwcompare idx_pr, mcompare(tukey) effects
+
+anova MEDCHGS idx_pr 
+tabstat MEDCHGS, statistics( mean sd skewness ) by(idx_pr)	
+pwcompare idx_pr, mcompare(tukey) effects
+
+anova ANESCHGS idx_pr 
+tabstat ANESCHGS, statistics( mean sd skewness ) by(idx_pr)	
+pwcompare idx_pr, mcompare(tukey) effects
+				
+
+anova RECOVCHGS idx_pr 
+tabstat RECOVCHGS, statistics( mean sd skewness ) by(idx_pr)	
+pwcompare idx_pr, mcompare(tukey) effects
+
+anova ROOMCHGS idx_pr 
+tabstat ROOMCHGS, statistics( mean sd skewness ) by(idx_pr)	
+pwcompare idx_pr, mcompare(tukey) effects
+
+*********************************************************************************
+Summary Stats for All Procedures for LOS 
+
+summarize LOSDAYS 
+summarize LOSDAYS if idx_pr == 1
+summarize LOSDAYS if idx_pr == 2
+summarize LOSDAYS if idx_pr == 3
+
+anova LOSDAYS idx_pr 
+tabstat LOSDAYS, statistics( mean sd skewness ) by(idx_pr)	
+pwcompare idx_pr, mcompare(tukey) effects
+
+summarize LOSDAYS if idx_lob == 1 | idx_lob == 2 | idx_lob == 3 
+summarize LOSDAYS if idx_lob == 1
+summarize LOSDAYS if idx_lob == 2
+summarize LOSDAYS if idx_lob == 3
+
+anova LOSDAYS idx_lob 
+tabstat LOSDAYS, statistics( mean sd skewness ) by(idx_lob)	
+pwcompare idx_lob, mcompare(tukey) effects
+
+
+summarize LOSDAYS if idx_wedge == 1 | idx_wedge == 2 | idx_wedge == 3 
+summarize LOSDAYS if idx_wedge == 1
+summarize LOSDAYS if idx_wedge == 2
+summarize LOSDAYS if idx_wedge == 3
+
+anova LOSDAYS idx_wedge 
+tabstat LOSDAYS, statistics( mean sd skewness ) by(idx_wedge)	
+pwcompare idx_wedge, mcompare(tukey) effects
+
+summarize LOSDAYS if idx_seg == 1 | idx_seg == 2 | idx_seg == 3 
+summarize LOSDAYS if idx_seg == 1
+summarize LOSDAYS if idx_seg == 2
+summarize LOSDAYS if idx_seg == 3
+
+anova LOSDAYS idx_seg 
+tabstat LOSDAYS, statistics( mean sd skewness ) by(idx_seg)	
+pwcompare idx_seg, mcompare(tukey) effects
+
+***************************************************************
+Summary Stats for Lobectomy 
+
+tab idx_lob
+
+summarize TCHGS if idx_lob == 1 | idx_lob == 2 | idx_lob == 3 
+
+summarize TCHGS if idx_lob == 1
+summarize TCHGS if idx_lob == 2
+summarize TCHGS if idx_lob == 3
+
+anova TCHGS idx_lob 
+tabstat TCHGS, statistics( mean sd skewness ) by(idx_lob)	
+pwcompare idx_lob, mcompare(tukey) effects
+
+
+summarize OPRMCHGS if idx_lob == 1 | idx_lob == 2 | idx_lob == 3 
+summarize OPRMCHGS if idx_lob == 1
+summarize OPRMCHGS if idx_lob == 2
+summarize OPRMCHGS if idx_lob == 3
+
+anova OPRMCHGS idx_lob 
+tabstat OPRMCHGS, statistics( mean sd skewness ) by(idx_lob)	
+pwcompare idx_lob, mcompare(tukey) effects
+
+
+summarize MEDCHGS if idx_lob == 1 | idx_lob == 2 | idx_lob == 3 
+summarize MEDCHGS if idx_lob == 1
+summarize MEDCHGS if idx_lob == 2
+summarize MEDCHGS if idx_lob == 3
+
+anova MEDCHGS idx_lob 
+tabstat MEDCHGS, statistics( mean sd skewness ) by(idx_lob)	
+pwcompare idx_lob, mcompare(tukey) effects
+
+summarize ANESCHGS if idx_lob == 1 | idx_lob == 2 | idx_lob == 3 
+summarize ANESCHGS if idx_lob == 1
+summarize ANESCHGS if idx_lob == 2
+summarize ANESCHGS if idx_lob == 3
+
+anova ANESCHGS idx_lob 
+tabstat ANESCHGS, statistics( mean sd skewness ) by(idx_lob)	
+pwcompare idx_lob, mcompare(tukey) effects
+
+
+summarize RECOVCHGS if idx_lob == 1 | idx_lob == 2 | idx_lob == 3 
+summarize RECOVCHGS if idx_lob == 1
+summarize RECOVCHGS if idx_lob == 2
+summarize RECOVCHGS if idx_lob == 3
+
+anova RECOVCHGS idx_lob 
+tabstat RECOVCHGS, statistics( mean sd skewness ) by(idx_lob)	
+pwcompare idx_lob, mcompare(tukey) effects
+
+summarize ROOMCHGS if idx_lob == 1 | idx_lob == 2 | idx_lob == 3 
+summarize ROOMCHGS if idx_lob == 1
+summarize ROOMCHGS if idx_lob == 2
+summarize ROOMCHGS if idx_lob == 3
+
+anova ROOMCHGS idx_lob 
+tabstat ROOMCHGS, statistics( mean sd skewness ) by(idx_lob)	
+pwcompare idx_lob, mcompare(tukey) effects
+
+
+***************************************************************
+Summary Stats for Wedge Resection 
+
+tab idx_wedge
+
+summarize TCHGS if idx_wedge == 1 | idx_wedge == 2 | idx_wedge == 3 
+
+summarize TCHGS if idx_wedge == 1
+summarize TCHGS if idx_wedge == 2
+summarize TCHGS if idx_wedge == 3
+
+anova TCHGS idx_wedge 
+tabstat TCHGS, statistics( mean sd skewness ) by(idx_wedge)	
+pwcompare idx_wedge, mcompare(tukey) effects
+
+
+summarize OPRMCHGS if idx_wedge == 1 | idx_wedge == 2 | idx_wedge == 3 
+summarize OPRMCHGS if idx_wedge == 1
+summarize OPRMCHGS if idx_wedge == 2
+summarize OPRMCHGS if idx_wedge == 3
+
+anova OPRMCHGS idx_wedge 
+tabstat OPRMCHGS, statistics( mean sd skewness ) by(idx_wedge)	
+pwcompare idx_wedge, mcompare(tukey) effects
+
+
+summarize MEDCHGS if idx_wedge == 1 | idx_wedge == 2 | idx_wedge == 3 
+summarize MEDCHGS if idx_wedge == 1
+summarize MEDCHGS if idx_wedge == 2
+summarize MEDCHGS if idx_wedge == 3
+
+anova MEDCHGS idx_wedge 
+tabstat MEDCHGS, statistics( mean sd skewness ) by(idx_wedge)	
+pwcompare idx_wedge, mcompare(tukey) effects
+
+summarize ANESCHGS if idx_wedge == 1 | idx_wedge == 2 | idx_wedge == 3 
+summarize ANESCHGS if idx_wedge == 1
+summarize ANESCHGS if idx_wedge == 2
+summarize ANESCHGS if idx_wedge == 3
+
+anova ANESCHGS idx_wedge 
+tabstat ANESCHGS, statistics( mean sd skewness ) by(idx_wedge)	
+pwcompare idx_wedge, mcompare(tukey) effects
+
+
+summarize RECOVCHGS if idx_wedge == 1 | idx_wedge == 2 | idx_wedge == 3 
+summarize RECOVCHGS if idx_wedge == 1
+summarize RECOVCHGS if idx_wedge == 2
+summarize RECOVCHGS if idx_wedge == 3
+
+anova RECOVCHGS idx_wedge 
+tabstat RECOVCHGS, statistics( mean sd skewness ) by(idx_wedge)	
+pwcompare idx_wedge, mcompare(tukey) effects
+
+summarize ROOMCHGS if idx_wedge == 1 | idx_wedge == 2 | idx_wedge == 3 
+summarize ROOMCHGS if idx_wedge == 1
+summarize ROOMCHGS if idx_wedge == 2
+summarize ROOMCHGS if idx_wedge == 3
+
+anova ROOMCHGS idx_wedge 
+tabstat ROOMCHGS, statistics( mean sd skewness ) by(idx_wedge)	
+pwcompare idx_wedge, mcompare(tukey) effects
+
+***************************************************************
+Summary Stats for Segemental Resection 
+
+
+tab idx_seg
+
+summarize TCHGS if idx_seg == 1 | idx_seg == 2 | idx_seg == 3 
+
+summarize TCHGS if idx_seg == 1
+summarize TCHGS if idx_seg == 2
+summarize TCHGS if idx_seg == 3
+
+anova TCHGS idx_seg 
+tabstat TCHGS, statistics( mean sd skewness ) by(idx_seg)	
+pwcompare idx_seg, mcompare(tukey) effects
+
+
+summarize OPRMCHGS if idx_seg == 1 | idx_seg == 2 | idx_seg == 3 
+summarize OPRMCHGS if idx_seg == 1
+summarize OPRMCHGS if idx_seg == 2
+summarize OPRMCHGS if idx_seg == 3
+
+anova OPRMCHGS idx_seg 
+tabstat OPRMCHGS, statistics( mean sd skewness ) by(idx_seg)	
+pwcompare idx_seg, mcompare(tukey) effects
+
+
+summarize MEDCHGS if idx_seg == 1 | idx_seg == 2 | idx_seg == 3 
+summarize MEDCHGS if idx_seg == 1
+summarize MEDCHGS if idx_seg == 2
+summarize MEDCHGS if idx_seg == 3
+
+anova MEDCHGS idx_seg 
+tabstat MEDCHGS, statistics( mean sd skewness ) by(idx_seg)	
+pwcompare idx_seg, mcompare(tukey) effects
+
+summarize ANESCHGS if idx_seg == 1 | idx_seg == 2 | idx_seg == 3 
+summarize ANESCHGS if idx_seg == 1
+summarize ANESCHGS if idx_seg == 2
+summarize ANESCHGS if idx_seg == 3
+
+anova ANESCHGS idx_seg 
+tabstat ANESCHGS, statistics( mean sd skewness ) by(idx_seg)	
+pwcompare idx_seg, mcompare(tukey) effects
+
+
+summarize RECOVCHGS if idx_seg == 1 | idx_seg == 2 | idx_seg == 3 
+summarize RECOVCHGS if idx_seg == 1
+summarize RECOVCHGS if idx_seg == 2
+summarize RECOVCHGS if idx_seg == 3
+
+anova RECOVCHGS idx_seg 
+tabstat RECOVCHGS, statistics( mean sd skewness ) by(idx_seg)	
+pwcompare idx_seg, mcompare(tukey) effects
+
+summarize ROOMCHGS if idx_seg == 1 | idx_seg == 2 | idx_seg == 3 
+summarize ROOMCHGS if idx_seg == 1
+summarize ROOMCHGS if idx_seg == 2
+summarize ROOMCHGS if idx_seg == 3
+
+anova ROOMCHGS idx_seg 
+tabstat ROOMCHGS, statistics( mean sd skewness ) by(idx_seg)	
+pwcompare idx_seg, mcompare(tukey) effects
